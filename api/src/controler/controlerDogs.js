@@ -89,6 +89,8 @@ const getName = async (name) => {
 
 
 const getById = async (id) => {
+
+  
     const apiSearch = await axios.get(urlApi)
     
     const dog = apiSearch.data.find(dog => dog.id == id)
@@ -100,20 +102,36 @@ const getById = async (id) => {
         return {
             image: dog.image.url,
             name: dog.name,
-            weight: dog.weight,
-            height: dog.height,
-            life_span: dog.life_span
+            weight: dog.weight.metric,
+            height: dog.height.metric,
+            life_span: dog.life_span,
+            temperament: dog.temperament
         }
 
     }else{
-            const dogDb = await Dog.findByPk(id)
+            const dogDb = await Dog.findOne({
+                where:{
+                    ID: id
+                },     
+                include:{
+                    model: Temperamento,
+                    attributes: ["name"],
+                    through: {
+                        attributes: []
+                    }
+                }
+            })
+            
+         
+                    
             return {
                 image: dogDb.image,
                 name: dogDb.name,
-                temperament: dogDb.temperament,
-                weight: dogDb.weight.metric,
-                height: dogDb.height.metric,
-}
+                weight: dogDb.weight,
+                height: dogDb.height,
+                life_span: dogDb.life_span,
+                temperament:dogDb.temperamentos.map(e => e.name).join(', '),
+            }
     }
 }
 
@@ -124,6 +142,9 @@ const createDog = async (name, temperament, weight, height, life_span) =>{
 
     await dog.addTemperamento(temperament)
     
+    console.log(dog)
+
+
     return dog
 }
 

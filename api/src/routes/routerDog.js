@@ -32,6 +32,7 @@ routerDog.get("/", async (req,res) => {
         res.status(200).json(getId);
         
     } catch (error) {
+        console.log(error)
         res.status(400).send("no se encontraron datos");
         
     }})

@@ -8,6 +8,8 @@ routerTemperaments.get('/', (req, res) => {
 });
 
 
+
+
 routerTemperaments.post('/', async (req, res) => {
 
 const temperament = await addTemperaments()
