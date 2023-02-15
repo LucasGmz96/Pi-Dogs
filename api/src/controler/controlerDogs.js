@@ -23,17 +23,41 @@ const getApi = async() => {
     }})
 }
 // pedido de info a la db para ruta principal
-const getDb = async() => {
-    return await Dog.findAll({
+const getDb = async () => {
+    const bdData = await Dog.findAll({
         atributes: ['image', 'name', 'weight'],
-        include:{
+        include: {
             model: Temperamento,
-            atributes: ['name'],
+            attributes: ["name"],
             through: {
-                atributes: []
-            }}
+                attributes: []
+            }
+        }
     })
+    const data = bdData.map(e =>{
+       return {
+        image: e.image,
+        name: e.name,
+        temperament: e.temperamentos.map(e => e.name).join(', '),
+        weight: e.weight,
+        
+       }
+      })
+
+
+   return data
+      
+        
+
+   
+
+    
+  
+    
 }
+    
+    
+
 // concatenacion de info para ruta principal
 const getAll = async() => {
     const db = await getDb()
