@@ -39,16 +39,17 @@ routerDog.get("/", async (req,res) => {
 
 
     routerDog.post("/", async (req,res) => {
-        const {name, temperament, weight, height, life_span} = req.body;
+        const {name, temperament, weight, height, life_span, image} = req.body;
         
         
         try {
-            const newDog = await createDog(name, temperament, weight, height, life_span);
+            const newDog = await createDog(name, temperament, weight, height, life_span, image);
 
-            res.status(201).json(newDog);
+            res.status(201).json("Creado correctamente");
             
         } catch (error) {
             res.status(400).send(error.message);
+            console.log(error);
 
         }
 
