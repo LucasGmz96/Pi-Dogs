@@ -8,42 +8,54 @@ const urlApi = `https://api.thedogapi.com/v1/breeds?api_key=${API_KEY}`;
 
 const getTemperaments = async () => {
 
+const result = await axios.get(urlApi);
+
   const registros = await Temperamento.findAll();
+
+  let valores = []
 
     if (registros.length > 0) {
 
-          return registros.map(e => e.name);
+          return registros;
     }else {
-            const result = await axios.get(urlApi);
-          let valores = []
+            
+          
 
           result.data.forEach( e => {
             if (e.temperament) {
-              e.temperament.split(',').forEach(e => {
-                valores.push(e.trim());
-              });
-            }})
-      }
-
-
-
-      const newTemp = new Set(data)
+           const newArray = e.temperament.split(",");
+           newArray.forEach( e => {
+             valores.push(e.trim())
+            })
+            };
+          })
+              const newTemp = new Set(valores);
 
   newTemp.forEach(async (e) => {
     await Temperamento.create({name: e})
           
 })
           
-const tempFilter = await Temperamento.findAll();
-return tempFilter.map(e => e.name);
+const allTemperament = await Temperamento.findAll();
+
+return allTemperament
+        
+        
+        
+        
+        }
+          
+
+
+
+
+
+
+
+
+
 
 }
-
-
-
-
-
-
 
 
 

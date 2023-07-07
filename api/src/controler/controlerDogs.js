@@ -6,6 +6,7 @@ const {Op} = require("sequelize");
 
 
 
+
 const urlApi = `https://api.thedogapi.com/v1/breeds?api_key=${API_KEY}`;
 
 
@@ -14,12 +15,18 @@ const urlApi = `https://api.thedogapi.com/v1/breeds?api_key=${API_KEY}`;
 // pedido de info a la api para ruta principal
 const getApi = async() => {
     const result = await axios.get(urlApi)
+    console.log(result);
     return result.data.map(e =>{
         return {
+            id: e.id,
             image: e.image.url,
             name: e.name,
             temperament: e.temperament,
             weight: e.weight.metric,
+            height: e.height.metric,
+            life_span: e.life_span,
+            
+
     }})
 }
 // pedido de info a la db para ruta principal
@@ -36,10 +43,13 @@ const getDb = async () => {
     })
     const data = bdData.map(e =>{
        return {
+        id: e.ID,
         image: e.image,
         name: e.name,
         temperament: e.temperamentos.map(e => e.name).join(', '),
         weight: e.weight,
+        height: e.height,
+        life_span: e.life_span,
         
        }
       })
@@ -47,13 +57,6 @@ const getDb = async () => {
 
    return data
       
-        
-
-   
-
-    
-  
-    
 }
     
     
@@ -72,6 +75,21 @@ const getName = async (name) => {
     
     // aca buscamos el nombre de los perros 
         const apiSearch = await axios.get(urlApi)
+
+        const arreglo = apiSearch.data.map(e =>{
+            return {
+                    id: e.id,
+                    name: e.name,
+                    height: e.height.metric,
+                    weight: e.weight.metric,
+                    life_span: e.life_span,
+                    image: e.image.url,
+                    temperament: e.temperament,
+            }
+        })
+        
+        
+        
         
           
         const dbSearch = await Dog.findAll({
@@ -82,7 +100,7 @@ const getName = async (name) => {
     // aca filtramos los nombres, con el query que nos pasan
         if(name){
 
-            const filterApi = apiSearch.data.filter(dog => dog.name.toLowerCase().includes(name.toLowerCase()));
+            const filterApi = arreglo.filter(dog => dog.name.toLowerCase().includes(name.toLowerCase()));
 
              
              
@@ -124,6 +142,7 @@ const getById = async (id) => {
 
     if (dog) {
         return {
+            id: dog.id,
             image: dog.image.url,
             name: dog.name,
             weight: dog.weight.metric,
@@ -149,6 +168,7 @@ const getById = async (id) => {
          
                     
             return {
+                id: dogDb.ID,
                 image: dogDb.image,
                 name: dogDb.name,
                 weight: dogDb.weight,
@@ -160,11 +180,19 @@ const getById = async (id) => {
 }
 
 
-const createDog = async (name, temperament, weight, height, life_span) =>{
+const createDog = async (name, temperament, weight, height, life_span, image) =>{
 
-    const dog = await Dog.create({name, weight, height, life_span})
+    const dog = await Dog.create({name, weight, height, life_span, image})
 
-    await dog.addTemperamento(temperament)
+    const temperamentoID = await Temperamento.findAll({
+        where:{
+            name: temperament,
+        }
+    },
+  
+    )
+
+    await dog.addTemperamento(temperamentoID)
     
     console.log(dog)
 
