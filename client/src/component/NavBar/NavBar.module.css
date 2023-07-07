@@ -1,0 +1,41 @@
+.NavBar{
+    display: flex;
+    justify-content:space-between;
+    align-items: center;
+    flex-direction:row;
+    width: 100%;
+    height: 50px;
+    border : 0px solid; 
+    background-color: #7f7f7f;
+}
+
+.div{
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    width: 500px;
+    
+}
+
+.home{
+    display: flex;
+    text-decoration: none;
+    color :black
+}
+
+.create{
+    display: flex;
+    text-decoration: none;
+    color :black
+}
+
+.divSearch{
+    display: flex;
+    margin-right: 40px;
+}
+
+.searchBar{
+display: flex;
+
+
+}
