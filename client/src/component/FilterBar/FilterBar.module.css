@@ -1,0 +1,8 @@
+.contenedor{
+    display: flex;
+    align-items: center;    
+    justify-content: end;
+    margin-right: 40px;
+    flex-direction: row;
+
+}
